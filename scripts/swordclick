@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# scripts/spamclick, but for swords
+
+instances=$(ps aux | grep "/bin/bash /home/$USER/.local/bin/swordclick" | grep -v grep | wc -l)
+
+if [[ $instances -gt 2 ]]
+then
+  pkill swordclick
+  exit
+fi
+
+while true
+do
+  xdotool click 1
+  sleep 0.6
+done

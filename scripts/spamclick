@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Exactly what it sounds like.
+
+instances=$(ps aux | grep "/bin/bash /home/$USER/.local/bin/spamclick" | grep -v grep | wc -l)
+
+if [[ $instances -gt 2 ]]
+then
+  pkill spamclick
+  exit
+fi
+
+while true
+do
+  xdotool click 1
+done

@@ -1,0 +1,83 @@
+*faceSize: 9
+*renderFont: true
+XTerm*allowBoldFonts: false
+XTerm*colorBDMode: true
+URxvt.scrollBar: false
+*termName: xterm-256color
+*faceName: envypn:style=Regular
+URxvt.font: xft:envypn:size=9
+URxvt.boldFont: xft:envypn:size=9
+xterm*font: fixed
+xterm*boldFont: fixed
+XTerm*boldMode: false
+
+#define _color0        #1D2021
+#define _color8        #928374
+
+#define _color1        #cc241d
+#define _color9        #fb4934
+
+#define _color2        #98971a
+#define _color10       #b8bb26
+
+#define _color3        #d79921
+#define _color11       #fabd2f
+
+#define _color4        #458588
+#define _color12       #83a598
+
+#define _color5        #b16286
+#define _color13       #d3869b
+
+#define _color6        #689d6a
+#define _color14       #83c07c
+
+#define _color7        #a89984
+#define _color15       #ebdbb2
+
+#define _foreground    #ebdbb2
+#define _background    #1D2021
+
+#define _cursorColor   #fbf1c7
+
+*color0         : _color0
+*color1         : _color1
+*color2         : _color2
+*color3         : _color3
+*color4         : _color4
+*color5         : _color5
+*color6         : _color6
+*color7         : _color7
+*color8         : _color8
+*color9         : _color9
+*color10        : _color10
+*color11        : _color11
+*color12        : _color12
+*color13        : _color13
+*color14        : _color14
+*color15        : _color15
+
+*foreground     : _foreground
+*background     : _background
+*cursorColor    : _cursorColor
+
+*.color0         : _color0
+*.color1         : _color1
+*.color2         : _color2
+*.color3         : _color3
+*.color4         : _color4
+*.color5         : _color5
+*.color6         : _color6
+*.color7         : _color7
+*.color8         : _color8
+*.color9         : _color9
+*.color10        : _color10
+*.color11        : _color11
+*.color12        : _color12
+*.color13        : _color13
+*.color14        : _color14
+*.color15        : _color15
+
+*.foreground     : _foreground
+*.background     : _background
+*.cursorColor    : _cursorColor

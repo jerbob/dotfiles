@@ -1,0 +1,20 @@
+# vim:foldmethod=marker
+
+pfetch
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Plugins {{{
+
+zplugin ice wait'!0' silent
+zplugin light zsh-users/zsh-syntax-highlighting
+zplugin ice wait'!0' silent
+zplugin light zsh-users/zsh-completions
+zplugin ice wait'!0' silent
+zplugin light hlissner/zsh-autopair
+zplugin ice wait lucid atload'_zsh_autosuggest_start'
+zplugin light zsh-users/zsh-autosuggestions
+
+# }}}

@@ -1,0 +1,4 @@
+configuration {
+	font: "envypnTTF 11";
+  theme: "gruvbox";
+}

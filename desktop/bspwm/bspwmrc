@@ -1,0 +1,13 @@
+#! /bin/sh
+
+sxhkd &
+
+bspc monitor -d 1
+bspc config border_width 0
+bspc config window_gap 2
+
+
+polybar bar & sleep 2
+
+xdo below -t $(xdo id -n root) $(xdo id -a polybar-bar_eDP1)
+feh --bg-scale /home/$USER/Pictures/wallpapers/bird.jpg

@@ -1,0 +1,65 @@
+super + Return
+	uxterm
+
+super + m
+  spamclick
+
+super + shift + m
+  swordclick
+
+super + shift + Return
+	tilix
+
+XF86AudioLowerVolume
+  pactl set-sink-volume 0 -5%
+
+XF86AudioRaiseVolume
+  pactl set-sink-volume 0 +5%
+
+XF86AudioMute
+  pactl set-sink-mute 0 toggle
+
+XF86Launch1
+  playerctl play-pause
+
+super + w
+  bspc node -c
+
+super + d
+	rofi -show run
+
+super + c
+  clipmenu
+
+super + r
+  screenkey -f 'Brass Mono' -t 1 -s small
+
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+super + alt + Escape
+	pkill -USR1 -x sxhkd
+
+super + shift + q
+	bspc node -{c,k}
+
+super + Escape
+  i3lock-fancy -f /usr/share/fonts/TTF/Sauce\ Code\ Pro\ Nerd\ Font\ Complete\ Mono.ttf -t "$(fortune bofh-excuses)"
+
+super + shift + Escape
+	bspc quit
+
+Print
+  screenshot
+
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+super + {t,shift + t,s,f}
+  bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + {_,shift + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}

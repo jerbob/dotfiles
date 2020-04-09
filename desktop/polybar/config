@@ -1,0 +1,105 @@
+[bar/bar]
+font-0 = "envypn:pixelsize=9;2.25"
+font-1 = "Siji:pixelsize=9;2.25"
+monitor = "eDP1"
+fixed-center = true
+
+width = 100%
+height = 20
+
+background = #1D2021
+foreground = #A89984
+
+radius = 0.0
+
+padding-left = 1
+padding-right = 1
+module-margin = 0
+
+modules-left = bspwm
+modules-center = battery date music corona
+modules-right = network
+
+
+[module/bspwm]
+strip-wsnumbers = true
+type = internal/bspwm
+format = <label-state> <label-mode>
+inline-mode = false
+enable-click = false
+fuzzy-match = true
+label-focused = %index%
+label-focused-foreground = #BA9869
+label-focused-background = #292929
+label-focused-padding = 1
+label-unfocused = %index%
+label-unfocused-padding = 1
+label-visible = %index%
+label-visible-padding = 1
+label-urgent = %index%
+label-urgent-foreground = #BA9869
+label-urgent-background = #292929
+label-urgent-padding = 1
+label-empty = %icon%
+
+
+[module/date]
+type = internal/date
+interval = 1.0
+date = "    %A, %d %B %I:%M:%S %p"
+
+
+[module/music]
+type = custom/script
+interval = 0.1
+exec = ~/.config/polybar/music.sh
+
+[module/corona]
+type = custom/script
+interval = 60
+exec = ~/.config/polybar/corona.sh
+
+[module/uniget]
+type = custom/script
+interval = 0.5
+exec = ~/.config/polybar/uniget.sh
+
+
+[module/network]
+type = internal/network
+interface = wlp2s0
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+label-connected = "%local_ip%"
+label-disconnected = 
+
+
+[module/battery]
+type = internal/battery
+full-at = 100
+label-charging = "%percentage%+ "
+label-discharging = "%percentage%- "
+label-full = "%percentage%+ "
+battery = BAT0
+adapter = AC
+poll-interval = 5
+
+[bar/vgabar]
+font-0 = "envypn:pixelsize=9;2.25"
+monitor = "VGA1"
+fixed-center = true
+
+width = 100%
+height = 20
+
+background = #1D2021
+foreground = #A89984
+
+radius = 0.0
+
+padding-left = 1
+padding-right = 1
+module-margin = 0
+
+modules-center = battery date music
+modules-right = network

@@ -1,0 +1,33 @@
+[global]
+    timeout = 2
+    padding = 5
+    markup = yes
+    word_wrap = yes
+    frame_width = 0
+    frame_color = "#272727"
+    transparency = 0
+    format = "%s\n%b"
+    alignment = center
+    idle_threshold = 120
+    separator_height = 1
+    sticky_history = yes
+    geometry = "0-0+20"
+    show_indicators = yes
+    horizontal_padding = 8
+    show_age_threshold = 60
+    font = envypnTTF 11
+
+[urgency_low]
+    background = "#E91D2021"
+    foreground = "#a89984"
+    timeout = 2
+
+[urgency_normal]
+    background = "#E91D2021"
+    foreground = "#a89984"
+    timeout = 2
+
+[urgency_critical]
+    background = "#E91D2021"
+    foreground = "#a89984"
+    timeout = 2

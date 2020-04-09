@@ -1,0 +1,126 @@
+# vim:foldmethod=marker
+
+export PS1=$'\e[0;36m${PWD/$HOME/~}\n$ \e[0m'
+
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]
+then
+  startx >/dev/null 2>/dev/null
+fi
+
+setxkbmap gb
+
+# Environment Variables {{{
+
+# }}}
+
+# Custom Aliases {{{
+
+alias sl="ls"
+alias git='hub'
+alias tree='exa --tree'
+alias ls='ls --color=auto'
+alias cat="bat -p --theme base16"
+alias grip="grip --pass $GH_PASS"
+alias wpm="wpm --stats-file ~/.config/wpm/stats.csv"
+alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
+alias cranberryjuice="firejail --noprofile --net=none wine"
+alias today='jq ".[$((`date +%w` - 1))]" ~/.config/uniget/timetable.json'
+alias exa='exa -s newest --git --colour=auto --group-directories-first --ignore-glob "dist|*.egg-info"'
+
+function smloadr() {
+  cd ~/.config/smloadr
+  /bin/smloadr -q FLAC -p ~/Music $1 <<< $DEEZER_COOKIE
+  cd -
+}
+
+function vagrant(){
+  /bin/vagrant $@ 2>/dev/null
+}
+
+# }}}
+
+export PATH="${PATH/:\/sbin}" 
+
+if [[ -z "$VIRTUAL_ENV" ]]; then
+  eval "$(pyenv init -)"
+  export PATH="$HOME/.pyenv:$PATH"
+fi
+
+# Configurable Options {{{
+
+watch=(notme)
+LOGCHECK=60
+REPORTTIME=5
+WORDCHARS='`~!@#$%^&*()-_=+[{]}\|;:",<.>/?'"'"
+
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt append_history           # Dont overwrite history
+setopt extended_history         # Also record time and duration of commands.
+setopt share_history            # Share history between multiple shells
+setopt hist_expire_dups_first   # Clear duplicates when trimming internal hist.
+setopt hist_find_no_dups        # Don't display duplicates during searches.
+setopt hist_ignore_dups         # Ignore consecutive duplicates.
+setopt hist_ignore_all_dups     # Remember only one unique copy of the command.
+setopt hist_reduce_blanks       # Remove superfluous blanks.
+setopt hist_save_no_dups        # Omit older commands in favor of newer ones.
+
+setopt promptsubst              # Enable prompt substitutions.
+setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
+setopt pushd_minus              # Reference stack entries with "-".
+
+setopt extended_glob
+
+# }}}
+
+# Key bindings {{{
+
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^f" forward-word
+bindkey "^b" backward-word
+bindkey "^k" kill-line
+bindkey "^d" delete-char
+bindkey "^y" accept-and-hold
+bindkey "^w" backward-kill-word
+bindkey "^u" backward-kill-line
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey "^F" history-incremental-pattern-search-forward
+bindkey "^i" expand-or-complete-prefix
+bindkey '^[^?' backward-kill-word
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+zle -N tcsh-backward-word
+bindkey '\e[1;3D' tcsh-backward-word
+bindkey '\e^[[D' tcsh-backward-word
+
+zle -N tcsh-forward-word
+bindkey '\e[1;3C' tcsh-forward-word
+bindkey '\e^[[C' tcsh-backward-word
+
+tcsh-backward-delete-word () {
+  local WORDCHARS="${WORDCHARS:s#/#}"
+  zle backward-delete-word
+}
+
+zle -N tcsh-backward-delete-word
+bindkey "^[^?" tcsh-backward-delete-word
+
+# }}}
+
+# Styling {{{
+
+zstyle ':completion:*' rehash true
+zstyle ":completion:*" matcher-list \
+  "m:{a-zA-Z}={A-Za-z}" \
+  "r:|[._-]=* r:|=*" \
+  "l:|=* r:|=*"
+
+zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
+
+# }}}
+
+source $HOME/.config/broot/launcher/bash/br
