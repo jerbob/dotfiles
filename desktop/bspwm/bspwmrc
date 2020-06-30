@@ -1,25 +1,27 @@
 #! /bin/sh
 
-sxhkd &
-picom &
-clipmenud &
+DARK="#272727"
+
 
 bspc monitor -d "1 " "2 " "3 " "4 " "5 " "6 " "7 " "8 " "9 " "10 "
 
-bspc config normal_border_color "#272727"
-bspc config focused_border_color "#3B3736"
+bspc config border_width 2
+bspc config top_padding 22
+bspc config window_gap -2
 
-bspc config border_width 1
-bspc config window_gap -1
+bspc config normal_border_color $DARK
+bspc config focused_border_color $DARK
 
-for side in top right bottom left
+for side in right bottom left
 do
- bspc config ${side}_padding 1
+ bspc config ${side}_padding 2
 done
 
-feh --bg-scale /home/jeremiah/Pictures/wallpapers/blank.jpg
+feh --bg-fill /home/jeremiah/Pictures/wallpapers/obra.png
 
-polybar bar &
-sleep 2
-xdo below -t $(xdo id -n root) $(xdo id -a polybar-bar_eDP1)
-$HOME/.pyenv/libexec/pyenv exec flashfocus
+picom &
+sxhkd &
+clipmenud &
+polybar bar 2>/dev/null &
+
+sleep 2 && xdo below -t $(xdo id -n root) $(xdo id -a polybar-bar_eDP1)
