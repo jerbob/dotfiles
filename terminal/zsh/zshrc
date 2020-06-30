@@ -1,12 +1,14 @@
 # vim:foldmethod=marker
 
-pfetch
-
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+PURE_PROMPT_SYMBOL='>'
+
 # Plugins {{{
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
 
 zplugin ice wait'!0' silent
 zplugin light zsh-users/zsh-syntax-highlighting
@@ -16,5 +18,9 @@ zplugin ice wait'!0' silent
 zplugin light hlissner/zsh-autopair
 zplugin ice wait lucid atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
-
 # }}}
+
+ZSH_THEME=''
+source ~/.oh-my-zsh/oh-my-zsh.sh
+
+zstyle :prompt:pure:prompt:success color 30
