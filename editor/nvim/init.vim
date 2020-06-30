@@ -1,9 +1,12 @@
 "                            vim:foldmethod=marker
 "                  ~ https://github.com/AnonGuy/Dotfiles ~
 
+let g:indentLine_enabled = 0
+
 " General Options {{{
 set nowrap
 set hidden
+set nospell
 set mouse=a
 set nobackup
 set smartcase
@@ -15,8 +18,10 @@ set foldlevel=99
 set shortmess+=c
 set nowritebackup
 set termguicolors
+
+set signcolumn=no
+set conceallevel=0
 set updatetime=300
-set signcolumn=yes
 set updatetime=500
 set encoding=utf-8
 set foldmethod=indent
@@ -37,6 +42,9 @@ autocmd Filetype python setlocal ts=4 sw=4 sts=0
 autocmd Filetype java setlocal ts=4 sw=4 sts=0
 autocmd Filetype html setlocal ts=2 sw=2 sts=0
 autocmd Filetype go setlocal ts=4 sw=4 sts=0
+autocmd FileType pdc set conceallevel=0
+autocmd Filetype md set conceallevel=0
+autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 " }}}
 
 
@@ -104,11 +112,16 @@ if dein#load_state('~/.cache/dein')
     call dein#add('aurieh/discord.nvim')
   endif
 
+  call dein#add('aghost-7/critiq.vim')
+  call dein#add('vim-pandoc/vim-pandoc')
+  call dein#add('vim-pandoc/vim-pandoc-syntax')
   call dein#add('Glench/Vim-Jinja2-Syntax')
   call dein#add('ap/vim-css-color')
+  call dein#add('chenillen/jad.vim')
   call dein#add('aserebryakov/vim-todo-lists')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('jiangmiao/auto-pairs')
+  call dein#add('Xuyuanp/nerdtree-git-plugin')
   call dein#add('majutsushi/tagbar')
   call dein#add('mhinz/vim-startify')
   call dein#add('neoclide/coc.nvim', {'merged':0, 'rev': 'release'})
@@ -150,7 +163,19 @@ if has('nvim')
   let $GIT_EDITOR = 'nvr -cc split --remote-wait'
 endif
 
-autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+" NERDTree git plugin symbols
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "~",
+    \ "Staged"    : "+",
+    \ "Untracked" : "*",
+    \ "Renamed"   : "r",
+    \ "Unmerged"  : "u",
+    \ "Deleted"   : "-",
+    \ "Dirty"     : "~",
+    \ "Clean"     : "c",
+    \ 'Ignored'   : 'i',
+    \ "Unknown"   : "?"
+    \ }
 
 " Map Tab completions for coc.nvim
 inoremap <silent><expr> <TAB>
@@ -191,6 +216,9 @@ try
   set undofile
 catch
 endtry
+
+" Show substitutions as they are being typed
+set inccommand=nosplit
 
 " Jump to last location when file is opened
 if has("autocmd")
