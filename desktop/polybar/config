@@ -1,6 +1,6 @@
 [bar/bar]
-font-0 = "envypn:pixelsize=9;2.25"
-font-1 = "Siji:pixelsize=9;2.25"
+font-0 = "Siji:pixelsize=9;2.25"
+font-1 = "envypn:pixelsize=9;2.25"
 monitor = "eDP1"
 fixed-center = true
 
@@ -17,7 +17,7 @@ padding-right = 1
 module-margin = 0
 
 modules-left = bspwm
-modules-center = battery date music corona
+modules-center = battery date music
 modules-right = network
 
 
@@ -46,7 +46,7 @@ label-empty = %icon%
 [module/date]
 type = internal/date
 interval = 1.0
-date = "    %A, %d %B %I:%M:%S %p"
+date = "      %A, %d %B %I:%M:%S %p"
 
 
 [module/music]
@@ -70,19 +70,19 @@ type = internal/network
 interface = wlp2s0
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
-label-connected = "%local_ip%"
+label-connected = " %local_ip%"
 label-disconnected = 
 
 
 [module/battery]
 type = internal/battery
 full-at = 100
-label-charging = "%percentage%+ "
-label-discharging = "%percentage%- "
-label-full = "%percentage%+ "
+label-charging = " %percentage%"
+label-discharging = " %percentage%"
+label-full = " %percentage%"
 battery = BAT0
 adapter = AC
-poll-interval = 5
+poll-interval = 1
 
 [bar/vgabar]
 font-0 = "envypn:pixelsize=9;2.25"
