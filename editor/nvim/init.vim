@@ -24,7 +24,6 @@ set conceallevel=0
 set updatetime=300
 set updatetime=500
 set encoding=utf-8
-set foldmethod=indent
 set laststatus=2 ruler
 set number norelativenumber
 
@@ -42,8 +41,10 @@ autocmd Filetype python setlocal ts=4 sw=4 sts=0
 autocmd Filetype java setlocal ts=4 sw=4 sts=0
 autocmd Filetype html setlocal ts=2 sw=2 sts=0
 autocmd Filetype go setlocal ts=4 sw=4 sts=0
+autocmd Filetype cs setlocal ts=4 sw=4 sts=0
 autocmd FileType pdc set conceallevel=0
 autocmd Filetype md set conceallevel=0
+autocmd FileType zsh set foldlevel=0
 autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 " }}}
 
@@ -72,27 +73,6 @@ tnoremap <Esc> <C-\><C-n>
 
 " FZF fuzzy tag finder
 nnoremap <silent> <C-t> :Tags<CR>
-
-" Floating window
-" Don't really use tags but this snippet is cool regardless
-let $FZF_DEFAULT_OPTS='--layout=reverse'
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-let g:fzf_tags_command = 'ctags -R %:p:h'
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-  let height = 10
-  let width = float2nr(&columns - (&columns * 2 / 4))
-  let col = float2nr((&columns - width) / 2)
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': 1,
-        \ 'col': col,
-        \ 'width': width,
-        \ 'height': height
-        \ }
-  call nvim_open_win(buf, v:true, opts)
-endfunction
 " }}}
 
 
@@ -104,40 +84,37 @@ if &compatible
   set nocompatible
 endif
 
-if dein#load_state('~/.cache/dein')
-  call dein#begin('~/.cache/dein')
-  
-  if executable('discord-canary') || executable('discord')
-    " If this machine has a Discord client:
-    call dein#add('aurieh/discord.nvim')
-  endif
+call plug#begin()
 
-  call dein#add('aghost-7/critiq.vim')
-  call dein#add('vim-pandoc/vim-pandoc')
-  call dein#add('vim-pandoc/vim-pandoc-syntax')
-  call dein#add('Glench/Vim-Jinja2-Syntax')
-  call dein#add('ap/vim-css-color')
-  call dein#add('chenillen/jad.vim')
-  call dein#add('aserebryakov/vim-todo-lists')
-  call dein#add('ctrlpvim/ctrlp.vim')
-  call dein#add('jiangmiao/auto-pairs')
-  call dein#add('Xuyuanp/nerdtree-git-plugin')
-  call dein#add('majutsushi/tagbar')
-  call dein#add('mhinz/vim-startify')
-  call dein#add('neoclide/coc.nvim', {'merged':0, 'rev': 'release'})
-  call dein#add('pseewald/vim-anyfold')
-  call dein#add('scrooloose/nerdtree')
-  call dein#add('itchyny/lightline.vim')
-  call dein#add('vim-python/python-syntax')
-  call dein#add('morhetz/gruvbox')
-  call dein#add('junegunn/fzf', {'build': './install --bin'})
-  call dein#add('junegunn/fzf.vim')
-  call dein#add('chr4/nginx.vim')
-  call dein#add('Yggdroot/indentLine')
+Plug 'aurieh/discord.nvim'
+Plug 'joshglendenning/vim-caddyfile'
+Plug 'aghost-7/critiq.vim'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'ap/vim-css-color'
+Plug 'chenillen/jad.vim'
+Plug 'aserebryakov/vim-todo-lists'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'majutsushi/tagbar'
+Plug 'mhinz/vim-startify'
+Plug 'neoclide/coc.nvim'
+Plug 'pseewald/vim-anyfold'
+Plug 'scrooloose/nerdtree'
+Plug 'itchyny/lightline.vim'
+Plug 'vim-python/python-syntax'
+Plug 'morhetz/gruvbox'
+Plug 'junegunn/fzf',
+Plug 'junegunn/fzf.vim'
+Plug 'chr4/nginx.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'xolox/vim-session'
+Plug 'xolox/vim-misc'
+Plug 'wakatime/vim-wakatime'
+Plug 'OmniSharp/omnisharp-vim'
 
-  call dein#end()
-  call dein#save_state()
-endif
+call plug#end()
 
 filetype plugin indent on
 syntax enable
@@ -162,6 +139,10 @@ filetype plugin indent on
 if has('nvim')
   let $GIT_EDITOR = 'nvr -cc split --remote-wait'
 endif
+
+" Don't autosave/load default editing session
+let g:session_autosave = 'no'
+let g:session_autoload = 'no'
 
 " NERDTree git plugin symbols
 let g:NERDTreeIndicatorMapCustom = {
