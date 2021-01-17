@@ -1,24 +1,11 @@
 # vim:foldmethod=marker
 
-export PS1=$'\e[0;36m${PWD/$HOME/~}\n$ \e[0m'
-
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]
-then
-  startx >/dev/null 2>/dev/null
-fi
-
-setxkbmap gb
-
-# Environment Variables {{{
-
-# }}}
-
-# Custom Aliases {{{
-
+# Custom aliases          {{{
 alias sl="ls"
 alias git='hub'
 alias tree='exa --tree'
-alias ls='ls --color=auto'
+alias cp="rsync -vz --progress"
+alias delta="delta --color-only"
 alias cat="bat -p --theme base16"
 alias grip="grip --pass $GH_PASS"
 alias wpm="wpm --stats-file ~/.config/wpm/stats.csv"
@@ -26,6 +13,7 @@ alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
 alias cranberryjuice="firejail --noprofile --net=none wine"
 alias today='jq ".[$((`date +%w` - 1))]" ~/.config/uniget/timetable.json'
 alias exa='exa -s newest --git --colour=auto --group-directories-first --ignore-glob "dist|*.egg-info"'
+alias paramspider="python /home/jeremiah/Documents/Programming/miscellaneous/paramspider/paramspider.py"
 
 function smloadr() {
   cd ~/.config/smloadr
@@ -33,21 +21,98 @@ function smloadr() {
   cd -
 }
 
+function destroy() {
+  pkill -SIGKILL "^${1}$"
+}
+
+function sherlock() {
+  cd /home/jeremiah/Documents/Programming/miscellaneous/sherlock
+  ./.env/bin/python sherlock $@
+  cd -
+}
+
+function clean() {
+  find -maxdepth 1 -type f -iname "[^.]*" -exec rm {} +
+}
+
+function seclude() {
+  TEMP=$(mktemp -d /tmp/Temp-XXX)
+  [[ -f $1 ]] && mv $@ -t $TEMP
+  cd $TEMP
+}
+
+function add-secret() {
+  # add-secret site-env SECRET_KEY deadbeef
+  kubectl patch secret $1 --patch="{\"stringData\":{\"$2\": \"$3\"}}"
+}
+
+function xkcd() {
+  [[ $@ == *"-v"* ]] && set -ex
+
+  JSON=$(mktemp)
+
+  curl -sL $(echo "xkcd.com/$1/info.0.json" | sed 's/\/\//\//') > $JSON
+
+  if [[ -z $1 ]]
+  then
+    MAX=$(jq -r .num $JSON)
+    curl -sL "xkcd.com/$(shuf -i 1-$MAX -n 1)/info.0.json" > $JSON
+    while [[ "$(jq -r .transcript $JSON)" == "" ]]
+    do
+      curl -sL "xkcd.com/$(shuf -i 1-$MAX -n 1)/info.0.json" > $JSON
+    done
+  fi
+
+  jq -r .transcript $JSON | tr -d '{}[]' | head -n -1 | sed "s/\(.*\)/\1\n/g"
+
+  rm $JSON
+}
+
+function ractf() {
+  ssh -t ractf cd /srv/ractf/$1 "&&" docker-compose ${@:2}
+}
+
+function gdelta() {
+  git diff $1 | delta
+}
+
+function mkbranch() {
+  git checkout -b $1
+  git push -u origin HEAD
+}
+
+function eyaml-edit() {
+  puppet_repo=$HOME/Documents/Programming/ractf/puppet
+  eyaml edit $1 -n \
+    gpg --gpg-always-trust \
+        --gpg-gnupghome $puppet_repo/.eyaml-gpg/ \
+        --gpg-recipients-file \
+    $puppet_repo/hiera-eyaml-gpg.recipients
+}
+
+function password() {
+  clipctl disable
+  keepassxc-cli clip ~/.gnupg/passwords.kdbx "$1"
+  clipctl enable
+}
+
 function vagrant(){
   /bin/vagrant $@ 2>/dev/null
 }
 
+function tunnel() {
+  port="$2"
+  case "$1" in
+    "mysql1") port="3306";;
+    "postgres1") port="5432";;
+  esac
+
+  ssh -p 22 -L localhost:$port:$1.wearefarm.net:$port -N ec2-user@bastion.wearefarm.net
+}
+
 # }}}
 
-export PATH="${PATH/:\/sbin}" 
-
-if [[ -z "$VIRTUAL_ENV" ]]; then
-  eval "$(pyenv init -)"
-  export PATH="$HOME/.pyenv:$PATH"
-fi
-
-# Configurable Options {{{
-
+# Configuration options   {{{
 watch=(notme)
 LOGCHECK=60
 REPORTTIME=5
@@ -72,11 +137,9 @@ setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
 setopt pushd_minus              # Reference stack entries with "-".
 
 setopt extended_glob
-
 # }}}
 
-# Key bindings {{{
-
+# Key bindings            {{{
 bindkey "^a" beginning-of-line
 bindkey "^e" end-of-line
 bindkey "^f" forward-word
@@ -108,11 +171,9 @@ tcsh-backward-delete-word () {
 
 zle -N tcsh-backward-delete-word
 bindkey "^[^?" tcsh-backward-delete-word
-
 # }}}
 
-# Styling {{{
-
+# Styling                 {{{
 zstyle ':completion:*' rehash true
 zstyle ":completion:*" matcher-list \
   "m:{a-zA-Z}={A-Za-z}" \
@@ -120,7 +181,17 @@ zstyle ":completion:*" matcher-list \
   "l:|=* r:|=*"
 
 zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
-
 # }}}
 
-source $HOME/.config/broot/launcher/bash/br
+# SSH agent configuration {{{
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
+fi
+# }}}
+
+# PATH modifications      {{{
+export PATH="$HOME/.zinit/polaris/bin:$HOME/.poetry/bin:$HOME/.cargo/bin:/opt/google-cloud-sdk/bin:$HOME/.pyenv/shims:/usr/local/sbin:/usr/local/bin:/usr/bin:$HOME/.gem/ruby/2.7.0/bin:/opt/resolve/bin:$HOME/.pyenv/bin:$HOME/.cabal/bin:$HOME/.cargo/bin:$HOME/.gem/ruby/2.6.0/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/Documents/.go/bin:$HOME/.luarocks/bin:$HOME/.local/bin:/usr/lib/jvm/java-8-openjdk/bin:$HOME/.local/bin/git-fuzzy/bin:/usr/lib/jvm/default/bin:/usr/bin/core_perl"
+# }}}
