@@ -1,10 +1,15 @@
 # vim:foldmethod=marker
 
+if [[ -z $DISPLAY ]] && [[ $TTY = /dev/tty1 ]]
+then
+  startx >/dev/null 2>/dev/null
+fi
+
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-PURE_PROMPT_SYMBOL='>'
+PURE_PROMPT_SYMBOL='$'
 
 # Plugins {{{
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
@@ -16,6 +21,8 @@ zplugin ice wait'!0' silent
 zplugin light zsh-users/zsh-completions
 zplugin ice wait'!0' silent
 zplugin light hlissner/zsh-autopair
+zplugin ice wait'!0' silent
+zplugin light Tarrasch/zsh-bd
 zplugin ice wait lucid atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
 # }}}
@@ -23,4 +30,12 @@ zplugin light zsh-users/zsh-autosuggestions
 ZSH_THEME=''
 source ~/.oh-my-zsh/oh-my-zsh.sh
 
-zstyle :prompt:pure:prompt:success color 30
+zstyle ':prompt:pure:path' color '#A89984'
+zstyle ':prompt:pure:git:*' color '#FE8019'
+zstyle ':prompt:pure:git:branch' color '#FABD2F'
+zstyle ':prompt:pure:prompt:success' color '#7C6F64'
+
+alias ls='exa --long'
+# }}}
+
+export PATH="$HOME/.poetry/bin:$PATH"
