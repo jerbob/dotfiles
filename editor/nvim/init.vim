@@ -1,13 +1,12 @@
 "                            vim:foldmethod=marker
 "                  ~ https://github.com/AnonGuy/Dotfiles ~
-
-let g:indentLine_enabled = 0
-
+"
 " General Options {{{
 set nowrap
 set hidden
 set nospell
 set mouse=a
+set noruler
 set nobackup
 set smartcase
 set noshowmode
@@ -15,16 +14,15 @@ set splitright
 set splitbelow
 set guicursor=
 set foldlevel=99
-set shortmess+=c
 set nowritebackup
 set termguicolors
+set shortmess=WFaoOAc
 
+set laststatus=0
 set signcolumn=no
 set conceallevel=0
-set updatetime=300
 set updatetime=500
 set encoding=utf-8
-set laststatus=2 ruler
 set number norelativenumber
 
 " Resize window ratios automagically
@@ -61,10 +59,10 @@ nnoremap <Leader>e :e <C-R>=expand('%:p:h') . '/'<CR>
 nnoremap <silent><expr> <Leader>h (&hls && v:hlsearch ? ':nohls' : ':set hls')."\n"
 
 " Toggle the NERDTree sidebar
-map <F6> :NERDTreeToggle<CR>
+map <F6> :NERDTreeToggleVCS<CR>
 " Toggle the ctags viewer
 map <F7> :Tagbar<CR>
-map <C-f> :CtrlP<CR>
+map <C-f> :Rg<CR>
 
 set clipboard=unnamed,unnamedplus
 
@@ -86,9 +84,10 @@ endif
 
 call plug#begin()
 
-Plug 'aurieh/discord.nvim'
+Plug 'itchyny/lightline.vim'
+Plug 'samoshkin/vim-mergetool'
+Plug 'ekalinin/Dockerfile.vim'
 Plug 'joshglendenning/vim-caddyfile'
-Plug 'aghost-7/critiq.vim'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'Glench/Vim-Jinja2-Syntax'
@@ -102,7 +101,6 @@ Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim'
 Plug 'pseewald/vim-anyfold'
 Plug 'scrooloose/nerdtree'
-Plug 'itchyny/lightline.vim'
 Plug 'vim-python/python-syntax'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf',
@@ -129,6 +127,7 @@ let g:gruvbox_contrast_dark='hard'
 
 colorscheme gruvbox
 set background=dark
+set guifont=Dank\ Mono:h30
 " }}}
 
 
@@ -143,6 +142,9 @@ endif
 " Don't autosave/load default editing session
 let g:session_autosave = 'no'
 let g:session_autoload = 'no'
+
+" Ignore NERDTree when loading workspace
+let g:workspace_autosave_ignore = ['nerdtree']
 
 " NERDTree git plugin symbols
 let g:NERDTreeIndicatorMapCustom = {
@@ -159,16 +161,26 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 
 " Map Tab completions for coc.nvim
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 function! s:check_back_space() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+  return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+nmap <leader>rn <Plug>(coc-rename)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Add coc.nvim to status line
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
@@ -177,10 +189,13 @@ if has('conceal')
   set conceallevel=0 concealcursor=niv
 endif
 
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeMinimalMenu = 1
 let g:python_highlight_all = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " Some fonts don't play nice with indentLine
+let g:indentLine_enabled = 0
 let g:indentLine_char = '|'
 
 " Gruvbox high contrast
