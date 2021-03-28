@@ -1,6 +1,6 @@
-"                            vim:foldmethod=marker
-"                  ~ https://github.com/AnonGuy/Dotfiles ~
-"
+" vim:foldmethod=marker
+" https://github.com/jerbob/dotfiles
+
 " General Options {{{
 set nowrap
 set hidden
