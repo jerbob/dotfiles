@@ -37,5 +37,3 @@ zstyle ':prompt:pure:prompt:success' color '#7C6F64'
 
 alias ls='exa --long'
 # }}}
-
-export PATH="$HOME/.poetry/bin:$PATH"
