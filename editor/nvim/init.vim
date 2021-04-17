@@ -1,6 +1,6 @@
-" vim:foldmethod=marker
-" https://github.com/jerbob/dotfiles
-
+"                            vim:foldmethod=marker
+"                  ~ https://github.com/AnonGuy/Dotfiles ~
+"
 " General Options {{{
 set nowrap
 set hidden
@@ -87,7 +87,6 @@ call plug#begin()
 Plug 'itchyny/lightline.vim'
 Plug 'samoshkin/vim-mergetool'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'joshglendenning/vim-caddyfile'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'Glench/Vim-Jinja2-Syntax'
@@ -111,6 +110,7 @@ Plug 'xolox/vim-session'
 Plug 'xolox/vim-misc'
 Plug 'wakatime/vim-wakatime'
 Plug 'OmniSharp/omnisharp-vim'
+Plug 'isobit/vim-caddyfile'
 
 call plug#end()
 
