@@ -35,13 +35,10 @@ autocmd TermOpen * let g:indentLine_enabled = 0
 
 " Tab Configuration
 set softtabstop=2 tabstop=2 shiftwidth=2 expandtab
-autocmd Filetype python setlocal ts=4 sw=4 sts=0
-autocmd Filetype java setlocal ts=4 sw=4 sts=0
+autocmd Filetype python,java setlocal ts=4 sw=4 sts=0
 autocmd Filetype html setlocal ts=2 sw=2 sts=0
-autocmd Filetype go setlocal ts=4 sw=4 sts=0
-autocmd Filetype cs setlocal ts=4 sw=4 sts=0
-autocmd FileType pdc set conceallevel=0
-autocmd Filetype md set conceallevel=0
+autocmd Filetype go,cs setlocal ts=4 sw=4 sts=0
+autocmd FileType pdc,md set conceallevel=0
 autocmd FileType zsh set foldlevel=0
 autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 " }}}
@@ -60,8 +57,8 @@ nnoremap <silent><expr> <Leader>h (&hls && v:hlsearch ? ':nohls' : ':set hls')."
 
 " Toggle the NERDTree sidebar
 map <F6> :NERDTreeToggleVCS<CR>
-" Toggle the ctags viewer
-map <F7> :Tagbar<CR>
+
+" Activate ripgrep search
 map <C-f> :Rg<CR>
 
 set clipboard=unnamed,unnamedplus
@@ -92,6 +89,7 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'ap/vim-css-color'
 Plug 'chenillen/jad.vim'
+Plug 'thaerkh/vim-workspace'
 Plug 'aserebryakov/vim-todo-lists'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
@@ -100,7 +98,7 @@ Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim'
 Plug 'pseewald/vim-anyfold'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-python/python-syntax'
+Plug 'sheerun/vim-polyglot'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf',
 Plug 'junegunn/fzf.vim'
