@@ -31,7 +31,9 @@ autocmd VimResized * wincmd =
 " Disable some things on terminal windows
 autocmd TermOpen * set nonu
 autocmd TermOpen * set signcolumn=no
-autocmd TermOpen * let g:indentLine_enabled = 0
+
+let g:indentLine_enabled = 0
+autocmd BufReadPre,FileReadPre * :IndentLinesEnable
 
 " Tab Configuration
 set softtabstop=2 tabstop=2 shiftwidth=2 expandtab
@@ -101,19 +103,15 @@ Plug 'scrooloose/nerdtree'
 Plug 'sheerun/vim-polyglot'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf',
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim',
 Plug 'chr4/nginx.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'xolox/vim-session'
 Plug 'xolox/vim-misc'
-Plug 'wakatime/vim-wakatime'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'isobit/vim-caddyfile'
 
 call plug#end()
-
-filetype plugin indent on
-syntax enable
 
 " }}}
 
@@ -131,6 +129,24 @@ set guifont=Dank\ Mono:h30
 
 " Plugin Configuration {{{
 filetype plugin indent on
+
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+let $FZF_DEFAULT_OPTS="--color=dark --layout=reverse --margin=1,1"
+let $FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard || fd --type f --type l --hidden --follow"
+
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 
 " Git shouldn't start nested nvim instances
 if has('nvim')
@@ -191,10 +207,6 @@ let g:NERDTreeMinimalUI = 1
 let g:NERDTreeMinimalMenu = 1
 let g:python_highlight_all = 1
 let g:airline#extensions#tabline#enabled = 1
-
-" Some fonts don't play nice with indentLine
-let g:indentLine_enabled = 0
-let g:indentLine_char = '|'
 
 " Gruvbox high contrast
 let g:gruvbox_contrast_dark = 'hard'
