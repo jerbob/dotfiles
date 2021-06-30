@@ -1,10 +1,5 @@
 # vim:foldmethod=marker
 
-if [[ -z $DISPLAY ]] && [[ $TTY = /dev/tty1 ]]
-then
-  startx >/dev/null 2>/dev/null
-fi
-
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -15,16 +10,16 @@ PURE_PROMPT_SYMBOL='$'
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
 
-zplugin ice wait'!0' silent
-zplugin light zsh-users/zsh-syntax-highlighting
-zplugin ice wait'!0' silent
-zplugin light zsh-users/zsh-completions
-zplugin ice wait'!0' silent
-zplugin light hlissner/zsh-autopair
-zplugin ice wait'!0' silent
-zplugin light Tarrasch/zsh-bd
-zplugin ice wait lucid atload'_zsh_autosuggest_start'
-zplugin light zsh-users/zsh-autosuggestions
+zinit ice wait'!0' silent
+zinit light zsh-users/zsh-syntax-highlighting
+zinit ice wait'!0' silent
+zinit light zsh-users/zsh-completions
+zinit ice wait'!0' silent
+zinit light hlissner/zsh-autopair
+zinit ice wait'!0' silent
+zinit light Tarrasch/zsh-bd
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
 # }}}
 
 ZSH_THEME=''
@@ -35,5 +30,7 @@ zstyle ':prompt:pure:git:*' color '#FE8019'
 zstyle ':prompt:pure:git:branch' color '#FABD2F'
 zstyle ':prompt:pure:prompt:success' color '#7C6F64'
 
-alias ls='exa --long'
+alias ls='exa -F --long --octal-permissions --no-permissions --no-user'
 # }}}
+
+eval "$(direnv hook zsh)"
