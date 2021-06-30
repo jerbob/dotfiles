@@ -1,27 +1,45 @@
-#! /bin/sh
+#! /usr/bin/env bash
+# vim:foldmethod=marker
 
 DARK="#272727"
 
+# General bspc configuration {{{
 
-bspc monitor -d "1 " "2 " "3 " "4 " "5 " "6 " "7 " "8 " "9 " "10 "
-
-bspc config border_width 2
-bspc config top_padding 22
 bspc config window_gap -2
+bspc config top_padding 24
+bspc config border_width 2
 
-bspc config normal_border_color $DARK
-bspc config focused_border_color $DARK
+for state in normal focused unfocused active
+do
+  bspc config ${state}_border_color $DARK
+done
 
 for side in right bottom left
 do
  bspc config ${side}_padding 2
 done
 
-feh --bg-fill /home/jeremiah/Pictures/wallpapers/obra.png
+# }}}
+
+# Startup programs {{{
+
+SHELL=dash sxhkd &
 
 picom &
-sxhkd &
 clipmenud &
-polybar bar 2>/dev/null &
+xmodmap $HOME/.Xmodmap &
+unclutter --timeout 1 --hide-on-touch &
 
-sleep 2 && xdo below -t $(xdo id -n root) $(xdo id -a polybar-bar_eDP1)
+feh --bg-center $HOME/Pictures/wallpapers/obra.png
+
+# }}}
+
+
+# Monitor-specific setup {{{
+
+sleep 2
+xrandr --output eDP1 --off --output DP1 --off --output DP2 --off --output HDMI1 --off --output HDMI2 --mode 2560x1440 --pos 0x0 --rotate normal --output VIRTUAL1 --off
+bspc monitor HDMI2 -d "1 " "2 " "3 " "4 " "5 " "6 " "7 " "8 " "9 " "0 " 
+polybar monitor &
+
+# }}}
