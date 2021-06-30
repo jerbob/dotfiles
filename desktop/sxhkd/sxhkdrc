@@ -1,65 +1,71 @@
 super + Return
-	uxterm
-
-super + m
-  spamclick
-
-super + shift + m
-  swordclick
+	alacritty
 
 super + shift + Return
-	tilix
+  alacritty --config-file=$HOME/.config/alacritty/large.yml
+
+XF86MonBrightnessDown
+  /usr/bin/xbacklight -dec 5
+
+XF86MonBrightnessUp
+  /usr/bin/xbacklight -inc 5
 
 XF86AudioLowerVolume
-  pactl set-sink-volume 0 -5%
+  /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo -5%
 
 XF86AudioRaiseVolume
-  pactl set-sink-volume 0 +5%
+  /usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo +5%
 
 XF86AudioMute
-  pactl set-sink-mute 0 toggle
+  /usr/bin/pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo toggle
 
 XF86Launch1
-  playerctl play-pause
+  /usr/bin/playerctl play-pause
 
 super + w
-  bspc node -c
+   /usr/bin/bspc node -c
 
 super + d
-	rofi -show run
+	 /usr/bin/rofi -show run
+
+super + a
+   /usr/bin/bspc node -g sticky
 
 super + c
-  clipmenu
+   CM_LAUNCHER=rofi /usr/bin/clipmenu
 
-super + r
-  screenkey -f 'Brass Mono' -t 1 -s small
+super + g
+   /home/jeremiah/Documents/Programming/jerbob/steam-rofi/gamelauncher.sh
 
-super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
-
-super + alt + Escape
-	pkill -USR1 -x sxhkd
-
-super + shift + q
-	bspc node -{c,k}
+super + x 
+   xkill
 
 super + Escape
-  i3lock-fancy -f /usr/share/fonts/TTF/Sauce\ Code\ Pro\ Nerd\ Font\ Complete\ Mono.ttf -t "$(fortune bofh-excuses)"
+  /usr/bin/pkill -USR1 -x sxhkd
+
+super + shift + q
+  /usr/bin/bspc node -{c,k}
 
 super + shift + Escape
-	bspc quit
+  /usr/bin/bspc quit
 
 Print
-  screenshot
+  /usr/bin/screenshot
 
 super + {grave,Tab}
-	bspc {node,desktop} -f last
+	/usr/bin/bspc {node,desktop} -f last
 
 super + {t,shift + t,s,f}
   bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+  /usr/bin/bspc {desktop -f,node -d} '^{1-9,10}'
 
 super + {_,shift + }{Left,Down,Up,Right}
-	bspc node -{f,s} {west,south,north,east}
+  /usr/bin/bspc node -{f,s} {west,south,north,east}
+
+super + {_,shift + }{h,j,k,l}
+  /usr/bin/bspc node -{f,s} {west,south,north,east}
+
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
