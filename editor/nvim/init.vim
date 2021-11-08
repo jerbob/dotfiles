@@ -16,7 +16,7 @@ set guicursor=
 set foldlevel=99
 set nowritebackup
 set termguicolors
-set shortmess=WFaoOAc
+set shortmess=WFaoOAcI
 
 set laststatus=0
 set signcolumn=no
@@ -48,11 +48,13 @@ autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 
 " Keyboard Shortcuts and remaps {{{
 nnoremap <space> za
-nnoremap <C-Tab> :bn<CR>
+nnoremap <C-m> :CtrlPMRUFiles<CR>
 nnoremap <C-S-Tab> :bp<CR>
 nnoremap <C-g> :GitMessenger<CR>
 nnoremap <Leader>h :Hexmode <CR>
 nnoremap <Leader>e :e <C-R>=expand('%:p:h') . '/'<CR>
+
+command W w
 
 " Toggle search highlights
 nnoremap <silent><expr> <Leader>h (&hls && v:hlsearch ? ':nohls' : ':set hls')."\n"
@@ -83,6 +85,8 @@ endif
 
 call plug#begin()
 
+Plug 'tpope/vim-unimpaired'
+Plug 'gcmt/taboo.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'samoshkin/vim-mergetool'
 Plug 'ekalinin/Dockerfile.vim'
@@ -96,7 +100,6 @@ Plug 'aserebryakov/vim-todo-lists'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'majutsushi/tagbar'
-Plug 'mhinz/vim-startify'
 Plug 'neoclide/coc.nvim'
 Plug 'pseewald/vim-anyfold'
 Plug 'scrooloose/nerdtree'
@@ -132,6 +135,7 @@ filetype plugin indent on
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
+set sessionoptions+=tabpages,globals
 let $FZF_DEFAULT_OPTS="--color=dark --layout=reverse --margin=1,1"
 let $FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard || fd --type f --type l --hidden --follow"
 
