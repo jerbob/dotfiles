@@ -49,8 +49,8 @@ super + shift + q
 super + shift + Escape
   /usr/bin/bspc quit
 
-Print
-  /usr/bin/screenshot
+super + shift + s
+  /bin/maim --hidecursor -s | /bin/xclip -sel clip -t image/png
 
 super + {grave,Tab}
   /usr/bin/bspc {node,desktop} -f last
