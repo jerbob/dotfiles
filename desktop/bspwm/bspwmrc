@@ -1,12 +1,20 @@
 #! /usr/bin/env bash
 # vim:foldmethod=marker
 
-DARK="#272727"
+# Immediately visible programs {{{
+
+feh --bg-scale $HOME/Pictures/wallpapers/obra.png &
+bspc monitor eDP-1 -d "1 " "2 " "3 " "4 " "5 " "6 " "7 " "8 " "9 " "0 " 
+polybar laptop &
+
+# }}}
 
 # General bspc configuration {{{
 
+DARK="#272727"
+
 bspc config window_gap -2
-bspc config top_padding 24
+bspc config top_padding 34
 bspc config border_width 2
 
 for state in normal focused unfocused active
@@ -27,19 +35,6 @@ SHELL=dash sxhkd &
 
 picom &
 clipmenud &
-xmodmap $HOME/.Xmodmap &
 unclutter --timeout 1 --hide-on-touch &
-
-feh --bg-center $HOME/Pictures/wallpapers/obra.png
-
-# }}}
-
-
-# Monitor-specific setup {{{
-
-sleep 2
-xrandr --output eDP1 --off --output DP1 --off --output DP2 --off --output HDMI1 --off --output HDMI2 --mode 2560x1440 --pos 0x0 --rotate normal --output VIRTUAL1 --off
-bspc monitor HDMI2 -d "1 " "2 " "3 " "4 " "5 " "6 " "7 " "8 " "9 " "0 " 
-polybar monitor &
 
 # }}}

@@ -1,5 +1,5 @@
 super + Return
-	alacritty
+  alacritty
 
 super + shift + Return
   alacritty --config-file=$HOME/.config/alacritty/large.yml
@@ -26,7 +26,7 @@ super + w
    /usr/bin/bspc node -c
 
 super + d
-	 /usr/bin/rofi -show run
+  /usr/bin/rofi -show run
 
 super + a
    /usr/bin/bspc node -g sticky
@@ -35,7 +35,7 @@ super + c
    CM_LAUNCHER=rofi /usr/bin/clipmenu
 
 super + g
-   /home/jeremiah/Documents/Programming/jerbob/steam-rofi/gamelauncher.sh
+   /home/jeremiah/.local/bin/gamelauncher
 
 super + x 
    xkill
@@ -53,7 +53,7 @@ Print
   /usr/bin/screenshot
 
 super + {grave,Tab}
-	/usr/bin/bspc {node,desktop} -f last
+  /usr/bin/bspc {node,desktop} -f last
 
 super + {t,shift + t,s,f}
   bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
@@ -68,4 +68,4 @@ super + {_,shift + }{h,j,k,l}
   /usr/bin/bspc node -{f,s} {west,south,north,east}
 
 super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
+  bspc node -p {west,south,north,east}

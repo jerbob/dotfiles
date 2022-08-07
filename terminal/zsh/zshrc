@@ -6,6 +6,14 @@ autoload -Uz _zinit
 
 PURE_PROMPT_SYMBOL='$'
 
+# Hacky Hacks {{{
+function precmd { [ -z "$PREPEND" ] && PREPEND=1 || print }
+function print {
+  # Prevent the theme from printing an unnecessary newline when new terminals are spawned.
+  [ 0 -eq "$#" -a "prompt_pure_precmd" = "${funcstack[-1]}" ] || builtin print "$@"
+}
+# }}}
+
 # Plugins {{{
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
@@ -22,6 +30,7 @@ zinit ice wait lucid atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 # }}}
 
+# Config and Aliases {{{
 ZSH_THEME=''
 source ~/.oh-my-zsh/oh-my-zsh.sh
 
@@ -30,7 +39,7 @@ zstyle ':prompt:pure:git:*' color '#FE8019'
 zstyle ':prompt:pure:git:branch' color '#FABD2F'
 zstyle ':prompt:pure:prompt:success' color '#7C6F64'
 
+eval "$(direnv hook zsh)"
+
 alias ls='exa -F --long --octal-permissions --no-permissions --no-user'
 # }}}
-
-eval "$(direnv hook zsh)"
