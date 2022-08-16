@@ -41,5 +41,5 @@ zstyle ':prompt:pure:prompt:success' color '#7C6F64'
 
 eval "$(direnv hook zsh)"
 
-alias ls='exa -F --long --octal-permissions --no-permissions --no-user'
-# }}}
+alias ls='exa -Fl --octal-permissions --no-user --git -s newest --colour=auto --group-directories-first'
+#  }}}

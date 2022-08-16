@@ -7,81 +7,50 @@ alias tree='exa --tree'
 alias cp="rsync -vz --progress"
 alias delta="delta --color-only"
 alias cat="bat -p --theme base16"
-alias grip="grip --pass $GH_PASS"
+alias grip='grip --pass $GITHUB_TOKEN'
 alias wpm="wpm --stats-file ~/.config/wpm/stats.csv"
-alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
-alias cranberryjuice="firejail --noprofile --net=none wine"
-alias today='jq ".[$((`date +%w` - 1))]" ~/.config/uniget/timetable.json'
-alias exa='exa -s newest --git --colour=auto --group-directories-first --ignore-glob "dist|*.egg-info"'
-alias paramspider="python /home/jeremiah/Documents/Programming/miscellaneous/paramspider/paramspider.py"
 
 function smloadr() {
+  # Start SMLoadr with preferred settings.
   cd ~/.config/smloadr
   /bin/smloadr -q FLAC -p ~/Music $1 <<< $DEEZER_COOKIE
   cd -
 }
 
-function destroy() {
-  pkill -SIGKILL "^${1}$"
-}
-
-function sherlock() {
-  cd /home/jeremiah/Documents/Programming/miscellaneous/sherlock
-  ./.env/bin/python sherlock $@
-  cd -
+function nvim() {
+  # If already inside a neovim terminal, open a new tab instead.
+  [[ -z "$NVIM" ]] && /usr/bin/nvim "$@" || nvr --remote-wait -cc "tabnew $@ | set nu"
 }
 
 function clean() {
+  # Delete all files in the current directory, except hidden files.
   find -maxdepth 1 -type f -iname "[^.]*" -exec rm {} +
 }
 
 function seclude() {
+  # Take the provided files, move them to a temp directory, and move there.
   TEMP=$(mktemp -d /tmp/Temp-XXX)
   [[ -f $1 ]] && mv $@ -t $TEMP
   cd $TEMP
 }
 
 function add-secret() {
-  # add-secret site-env SECRET_KEY deadbeef
+  # Add secrets to the specified kubectl project.
   kubectl patch secret $1 --patch="{\"stringData\":{\"$2\": \"$3\"}}"
 }
 
-function xkcd() {
-  [[ $@ == *"-v"* ]] && set -ex
-
-  JSON=$(mktemp)
-
-  curl -sL $(echo "xkcd.com/$1/info.0.json" | sed 's/\/\//\//') > $JSON
-
-  if [[ -z $1 ]]
-  then
-    MAX=$(jq -r .num $JSON)
-    curl -sL "xkcd.com/$(shuf -i 1-$MAX -n 1)/info.0.json" > $JSON
-    while [[ "$(jq -r .transcript $JSON)" == "" ]]
-    do
-      curl -sL "xkcd.com/$(shuf -i 1-$MAX -n 1)/info.0.json" > $JSON
-    done
-  fi
-
-  jq -r .transcript $JSON | tr -d '{}[]' | head -n -1 | sed "s/\(.*\)/\1\n/g"
-
-  rm $JSON
-}
-
 function ractf() {
+  # Execute docker-compose commands on ractf infrastructure.
   ssh -t ractf cd /srv/ractf/$1 "&&" docker-compose ${@:2}
 }
 
 function gdelta() {
-  git diff $1 | delta
-}
-
-function mkbranch() {
-  git checkout -b $1
-  git push -u origin HEAD
+  # Run git diff through a colorizer.
+  git diff $@ | delta
 }
 
 function eyaml-edit() {
+  # Edit encrypted RACTF puppet data.
   puppet_repo=$HOME/Documents/Programming/ractf/puppet
   eyaml edit $1 -n \
     gpg --gpg-always-trust \
@@ -91,25 +60,11 @@ function eyaml-edit() {
 }
 
 function password() {
+  # Get a password from keepass without it appearing on clipmenu.
   clipctl disable
   keepassxc-cli clip ~/.gnupg/passwords.kdbx "$1"
   clipctl enable
 }
-
-function vagrant(){
-  /bin/vagrant $@ 2>/dev/null
-}
-
-function tunnel() {
-  port="$2"
-  case "$1" in
-    "mysql1") port="3306";;
-    "postgres1") port="5432";;
-  esac
-
-  ssh -p 22 -L localhost:$port:$1.wearefarm.net:$port -N ec2-user@bastion.wearefarm.net
-}
-
 # }}}
 
 # Configuration options   {{{
@@ -122,9 +77,9 @@ HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 
-setopt append_history           # Dont overwrite history
+setopt append_history           # Don't overwrite history.
 setopt extended_history         # Also record time and duration of commands.
-setopt share_history            # Share history between multiple shells
+setopt share_history            # Share history between multiple shells.
 setopt hist_expire_dups_first   # Clear duplicates when trimming internal hist.
 setopt hist_find_no_dups        # Don't display duplicates during searches.
 setopt hist_ignore_dups         # Ignore consecutive duplicates.
@@ -136,7 +91,7 @@ setopt promptsubst              # Enable prompt substitutions.
 setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
 setopt pushd_minus              # Reference stack entries with "-".
 
-setopt extended_glob
+setopt extended_glob            # We like the glob.
 # }}}
 
 # Key bindings            {{{
@@ -185,13 +140,44 @@ zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 
 # SSH agent configuration {{{
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+    # If the SSH agent isn't already running, start it.
+    ssh-agent -t 24h > "/tmp/ssh-agent.env"
+fi
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    # If we don't have the right env vars, source them.
+    source "/tmp/ssh-agent.env" >/dev/null
+fi
+# }}} 
+
+# PATH shims and env vars {{{
+export DOCKER_BUILDKIT=1
+export PYTHONPYCACHEPREFIX=/tmp
+export PYENV_ROOT="$HOME/.pyenv"
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket 
+
+# Env vars and other secret stuff that won't be committed to git.
+source ~/.secrets.zsh
+
+# Apply all our PATH shims all at once!
+export PATH="/opt/cuda/bin/:$HOME/.poetry/bin:$HOME/.cargo/bin:$PYENV_ROOT/shims:$PYENV_ROOT/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:$HOME/.gem/ruby/2.7.0/bin:/opt/resolve/bin:$HOME/.cabal/bin:$HOME/.gem/ruby/2.6.0/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/Documents/.go/bin:$HOME/.luarocks/bin:$HOME/.local/bin:/usr/lib/jvm/java-8-openjdk/bin:$HOME/.local/bin/git-fuzzy/bin:/usr/lib/jvm/default/bin:/usr/bin/core_perl"
+
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+# }}}
+
+# SSH agent configuration {{{
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent -t 12h > "$XDG_RUNTIME_DIR/ssh-agent.env"
 fi
 if [[ ! "$SSH_AUTH_SOCK" ]]; then
     source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
 fi
 # }}}
 
-# PATH modifications      {{{
-export PATH="$HOME/.zinit/polaris/bin:$HOME/.poetry/bin:$HOME/.cargo/bin:/opt/google-cloud-sdk/bin:$HOME/.pyenv/shims:/usr/local/sbin:/usr/local/bin:/usr/bin:$HOME/.gem/ruby/2.7.0/bin:/opt/resolve/bin:$HOME/.pyenv/bin:$HOME/.cabal/bin:$HOME/.cargo/bin:$HOME/.gem/ruby/2.6.0/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/Documents/.go/bin:$HOME/.luarocks/bin:$HOME/.local/bin:/usr/lib/jvm/java-8-openjdk/bin:$HOME/.local/bin/git-fuzzy/bin:/usr/lib/jvm/default/bin:/usr/bin/core_perl"
+# Misc                    {{{
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]
+then
+  # If there is no display and we're on TTY1, start Xorg.
+  startx >/dev/null 2>/dev/null
+fi
 # }}}
