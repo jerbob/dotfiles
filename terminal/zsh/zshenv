@@ -49,16 +49,6 @@ function gdelta() {
   git diff $@ | delta
 }
 
-function eyaml-edit() {
-  # Edit encrypted RACTF puppet data.
-  puppet_repo=$HOME/Documents/Programming/ractf/puppet
-  eyaml edit $1 -n \
-    gpg --gpg-always-trust \
-        --gpg-gnupghome $puppet_repo/.eyaml-gpg/ \
-        --gpg-recipients-file \
-    $puppet_repo/hiera-eyaml-gpg.recipients
-}
-
 function password() {
   # Get a password from keepass without it appearing on clipmenu.
   clipctl disable
