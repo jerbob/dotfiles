@@ -24,6 +24,7 @@ function nvim() {
 
 function clean() {
   # Delete all files in the current directory, except hidden files.
+  # ...OR symlinks. That's why I use this over "rm *".
   find -maxdepth 1 -type f -iname "[^.]*" -exec rm {} +
 }
 
