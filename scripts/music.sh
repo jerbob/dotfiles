@@ -1,4 +1,6 @@
-#! /bin/sh
+#!/usr/bin/env sh
+
+alias playerctl="playerctl --ignore-player=chromium"
 
 if [ "$(playerctl -l 2>&1)" != "No players were found" ]; then
   player_status=$(playerctl status 2>/dev/null)
