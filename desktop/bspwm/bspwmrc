@@ -4,15 +4,15 @@
 # Immediately visible programs {{{
 feh --bg-scale $HOME/Pictures/wallpapers/obra.png &
 
-if xrandr --listmonitors | grep HDMI-1
+if xrandr --listmonitors | grep HDMI-A-0
 then
   # Setup orientation of multiple monitors if they exist.
   xrandr \
-    --output eDP-1 --mode 2880x1800 --pos 0x1080 \
-    --output HDMI-1 --mode 1920x1080 --pos 480x0
-  bspc monitor eDP-1 -d 2\  3\  4\  5\  6\  7\  8\  9\  0\ 
+    --output eDP --mode 2880x1800 --pos 0x1600 \
+    --output HDMI-A-0 --mode 0x6b --pos 160x160
+  bspc monitor eDP -d 2\  3\  4\  5\  6\  7\  8\  9\  0\ 
 else
-  bspc monitor eDP-1 -d 1\  2\  3\  4\  5\  6\  7\  8\  9\  0\ 
+  bspc monitor eDP -d 1\  2\  3\  4\  5\  6\  7\  8\  9\  0\ 
 fi
 
 polybar laptop &
@@ -39,6 +39,7 @@ done
 SHELL=dash sxhkd &
 
 picom &
+dunst &
 clipmenud &
 unclutter --timeout 1 --hide-on-touch &
 # }}}
